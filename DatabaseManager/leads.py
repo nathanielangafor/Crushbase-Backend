@@ -57,6 +57,13 @@ class LeadsManager:
             platforms_lower = [p.lower() for p in platforms]
             leads = [lead for lead in leads if lead["platform"].lower() in platforms_lower]
             
+        # Convert MongoDB number types to regular Python integers
+        for lead in leads:
+            if isinstance(lead.get("follower_count"), dict) and "$numberInt" in lead["follower_count"]:
+                lead["follower_count"] = int(lead["follower_count"]["$numberInt"])
+            if isinstance(lead.get("following_count"), dict) and "$numberInt" in lead["following_count"]:
+                lead["following_count"] = int(lead["following_count"]["$numberInt"])
+            
         # Sort by captured_at in descending order (most recent first)
         leads.sort(key=lambda x: datetime.fromisoformat(x["captured_at"].replace("Z", "+00:00")), reverse=True)
         return leads

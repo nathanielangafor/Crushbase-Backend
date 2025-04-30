@@ -79,7 +79,7 @@ CONTACT_EXTRACTOR_PROMPT: str = """
   Extract contacts in the following JSON format (as a JSON array):
   [
     {{
-      "name": "...",
+      "name": "...",       // REQUIRED! If not present, skip this entry.
       "email": "...",      // optional — include only if present
       "phone": "...",      // optional — include only if present
       "role": "...",       // optional — include only if explicitly present
@@ -93,6 +93,7 @@ CONTACT_EXTRACTOR_PROMPT: str = """
   - Do NOT fabricate or infer any missing data.
   - Field values must be exactly as they appear in the input.
   - Omit any field that is not present.
+  - At the end of the run, scan the contacts and remove any that a sales rep might not be able to contact or find useful.
 
   Begin processing the text below:
 

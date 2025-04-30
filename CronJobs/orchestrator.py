@@ -119,6 +119,7 @@ def process_pending_crawler_sessions(user_data):
 def process_tracked_accounts(user_data):
     """Updates tracked accounts for each user based on platform."""
     for user in user_data:
+        if user["internal_site_id"] != "4d283fe13044ba6182fc61f7258e3ee167209cd0d7eafc1dcf8d9d745392b465": continue
         for platform in user["tracked_accounts"]:
             for account in user["tracked_accounts"][platform]:
                 if platform == "instagram":
@@ -132,5 +133,4 @@ if __name__ == "__main__":
     # populate_dummy_user()
     user_data = get_user_data()
     process_pending_crawler_sessions(user_data)
-    time.sleep(100000)
     # process_tracked_accounts(user_data)

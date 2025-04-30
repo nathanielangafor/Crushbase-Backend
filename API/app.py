@@ -253,12 +253,24 @@ async def create_tracked_account(account: TrackedAccount):
                 status_code=status.HTTP_404_NOT_FOUND,
                 content={"message": "User not found"}
             )
-            
+        
+        if user.platform == "instagram":
+            access_key = os.getenv('X-RAPIDAPI-KEY')
+            if not access_key:
+                return JSONResponse(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    content={"message": "Instagram API access key not configured"}
+                )
+            instagram_api = insta(access_key)
+            metadata = {
+                "username_id": instagram_api.get_userid_from_username(account.username)["user_id"]
+            }
+        
         account_id = account_manager.add_tracked_account(
             account.internal_site_id,
             account.platform,
             account.username,
-            {}
+            metadata=metadata
         )
         
         return JSONResponse(
@@ -885,5 +897,5 @@ async def get_linkedin_compatibility(
         )
 
 if __name__ == "__main__":    
-    start_server(prod=True)
+    start_server(prod=False)
 

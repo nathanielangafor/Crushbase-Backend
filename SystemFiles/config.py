@@ -1,4 +1,4 @@
-supported_platforms = ["instagram", "tiktok", "linkedin", "twitter"]
+supported_platforms = ["instagram", "tiktok", "linkedin", "twitter/x", "facebook"]
 
 subscription_plans = {
     "tier_1": {
@@ -34,74 +34,246 @@ subscription_plans = {
 }
 
 ICPs: dict = {
-    "social_savy_sdr": """
+    "sales_development_rep": """
         {{
-            "icp_name": "Social-Savvy SDR",
-            "industry": "B2B Sales / Tech Company",
-            "company_stage": "Any, ideally smaller",
-            "company_size": "10–200 employees",
-            "team_context": "Small sales team; every rep must maximize efficiency",
+            "icp_name": "Sales Development Rep (SDR)",
+            "industry": "B2B SaaS / Tech / Services",
+            "company_stage": "Seed to Series B",
+            "company_size": "10–500 employees",
+            "team_context": "Part of a small-to-mid sales team, focused on pipeline generation",
             "role_titles": [
                 "Sales Development Representative",
                 "Business Development Representative",
-                "Account Executive (self-prospecting)"
+                "Outbound Sales Rep"
             ],
             "work_experience": [
-                "1–5 years in B2B sales or tech company",
-                "Regular use of outbound prospecting tools (LinkedIn Sales Navigator, Twitter/X, Instagram)",
-                "Familiarity with CRMs like Salesforce or HubSpot"
+                "0–5 years in tech sales",
+                "Uses outbound prospecting tools like Outreach, Apollo, or LinkedIn",
+                "Enters leads into CRMs like HubSpot or Salesforce"
             ],
             "daily_process": [
-                "Check LinkedIn, Instagram & Twitter for new engagement",
-                "Manually comb competitor posts for likers & commenters",
-                "Log prospects into spreadsheets or CRM",
-                "Cold-call and email prospects",
-                "Spends ~60% of day researching vs ~33% actively selling"
+                "Research target accounts and decision-makers",
+                "Send cold emails or LinkedIn messages",
+                "Follow up with warm leads",
+                "Log activities into CRM",
+                "Sometimes scroll social media for clues or engagement signals"
             ],
             "core_pain_points": [
-                "Time-consuming manual prospecting",
-                "Missing critical “intent signals” from social engagement",
-                "Low response rates on purely cold outreach",
-                "Daily pressure to hit pipeline quotas with limited warm leads"
+                "Wasting time on poor-fit prospects",
+                "Hard to identify real buyer intent",
+                "Cold outreach has low conversion",
+                "Manual research slows down volume goals"
             ],
             "current_workarounds": [
-                "Maintain spreadsheets of competitors’ likers/commenters",
-                "Use Google Alerts or basic social-listening tools (only captures mentions)",
-                "Rely on cold lists and traditional outreach",
-                "Drop social-media lead-hunting when slammed for time"
+                "Scrape LinkedIn comments for prospects",
+                "Use Excel to track interested leads",
+                "Manually monitor competitor social posts"
             ],
             "emotional_states": [
-                "Stressed and anxious about meeting quotas",
-                "Frustrated & FOMO—seeing competitors scoop up engaged prospects",
-                "Hungry and opportunistic for any edge or efficiency gain"
+                "Stressed about quota and rejection",
+                "Time-starved, wants to focus on what works",
+                "Hungry for tools that improve reply rate and warm lead volume"
             ],
             "language_phrases": [
-                "pipeline",
-                "lead volume",
-                "MQLs/SQLs",
-                "conversion rates",
-                "hitting quota",
-                "warm vs cold outreach",
                 "I need more warm leads",
-                "spending hours on LinkedIn for scraps isn’t scalable"
+                "my outreach isn’t landing",
+                "qualified pipeline",
+                "who’s actually interested?",
+                "this list is ice cold"
             ],
             "trigger_signals": [
-                "“We track our competitors’ social media to find prospects.”",
-                "“It takes forever to gather leads from Instagram or Twitter engagements.”",
-                "“Warm leads from social convert so much better than cold calls.”",
-                "“I live on LinkedIn for prospecting.”",
-                "“I hate data entry and list building.”"
+                "“We spend hours researching before sending one message.”",
+                "“Engaged leads convert better, but they’re hard to find.”",
+                "“Most of my day is just list building.”"
             ],
             "early_adopter_indicators": [
-                "Already mining multiple social platforms for lead gen",
-                "Comfortable testing new sales/automation tools",
-                "Has closed deals originating from social media interactions",
-                "Actively seeks to minimize grunt work to hit targets"
+                "Open to tools that boost prospecting efficiency",
+                "Already experimenting with social data",
+                "Driven by metrics: reply rate, meetings booked, pipeline generated"
             ]
         }}
     """,
-    "ICP #2": """
+
+    "bootstrapped_founder": """
+        {{
+            "icp_name": "Bootstrapped Founder",
+            "industry": "SaaS / Creator Economy / Online Services",
+            "company_stage": "Pre-seed to Series A",
+            "company_size": "1–10 employees",
+            "team_context": "Tiny or solo team juggling product, marketing, and growth",
+            "role_titles": [
+                "Founder",
+                "Solo SaaS Builder",
+                "Indie Hacker",
+                "Technical Cofounder"
+            ],
+            "work_experience": [
+                "Built and shipped at least one product or MVP",
+                "Runs lean and relies on low-cost growth methods",
+                "Active on X/Twitter, LinkedIn, Reddit to drive attention"
+            ],
+            "daily_process": [
+                "Post product updates or share wins on social",
+                "Search X/Twitter for competitor mentions",
+                "Cold DM users who engage with similar products",
+                "Juggle between shipping features and finding users"
+            ],
+            "core_pain_points": [
+                "Growth feels like shouting into the void",
+                "Social engagement doesn’t turn into users",
+                "No time to consistently do outreach",
+                "Hard to identify who’s actually interested"
+            ],
+            "current_workarounds": [
+                "Manually message people who like competitor tweets",
+                "Scrape engagement from posts using scripts or Zapier",
+                "Pray for virality after posting product launches"
+            ],
+            "emotional_states": [
+                "Exhausted from doing everything alone",
+                "Hyper-aware of burn rate and traction pressure",
+                "Craving validation and growth breakthroughs"
+            ],
+            "language_phrases": [
+                "traction",
+                "bootstrapped",
+                "getting early users",
+                "distribution is harder than building",
+                "how do I convert interest into users?"
+            ],
+            "trigger_signals": [
+                "“People liked our launch post but didn’t sign up.”",
+                "“I can’t tell who’s actually serious about using our tool.”",
+                "“Growth is slow even with good engagement.”"
+            ],
+            "early_adopter_indicators": [
+                "Technical enough to value automation",
+                "Already tried scraping social engagement",
+                "Willing to test new tools for growth leverage"
+            ]
+        }}
     """,
-    "ICP #3": """
+
+    "content_creator": """
+        {{
+            "icp_name": "Content Creator",
+            "industry": "Media / Education / Creator Economy",
+            "company_stage": "Growing audience",
+            "company_size": "1–5 (typically solo)",
+            "team_context": "Runs own brand or small team; responsible for growth and monetization",
+            "role_titles": [
+                "Influencer",
+                "Newsletter Author",
+                "YouTuber",
+                "TikToker",
+                "Podcaster"
+            ],
+            "work_experience": [
+                "Built an audience on at least one social platform",
+                "Monetizes via brand deals, courses, subscriptions, or product links",
+                "Engages with audience daily via posts, comments, or DMs"
+            ],
+            "daily_process": [
+                "Post new content to social platforms",
+                "Respond to top DMs and comments",
+                "Track engagement and mentions",
+                "Negotiate brand deals or promote products",
+                "Manually check for potential business opportunities in replies"
+            ],
+            "core_pain_points": [
+                "Hard to identify serious fans or buyers",
+                "Overwhelmed by comments, likes, and DMs",
+                "Miss out on collabs or deal requests buried in engagement",
+                "Managing everything manually across platforms"
+            ],
+            "current_workarounds": [
+                "Use spreadsheets to track high-value followers",
+                "Rely on gut feeling or followers’ message tone",
+                "Use VA or assistant to help sift through engagement"
+            ],
+            "emotional_states": [
+                "Stressed by constant notifications",
+                "Excited about growth but unsure how to capitalize",
+                "Burned out from low ROI on high effort"
+            ],
+            "language_phrases": [
+                "my DMs are a mess",
+                "need to monetize my audience",
+                "I’m missing deals",
+                "engagement is high, conversions are low"
+            ],
+            "trigger_signals": [
+                "“I have viral posts but don’t know who’s serious.”",
+                "“People comment but don’t follow through.”",
+                "“I miss business leads in the noise.”"
+            ],
+            "early_adopter_indicators": [
+                "Comfortable with tools and automations",
+                "Already trying to improve monetization",
+                "Engagement >10% per post or >5k followers"
+            ]
+        }}
+    """,
+
+    "athlete": """
+        {{
+            "icp_name": "Athlete",
+            "industry": "Sports / Fitness / Health & Wellness",
+            "company_stage": "Active or transitioning to business",
+            "company_size": "1–10 (often solo brand)",
+            "team_context": "May be part of a team, brand, or operate independently as a personal brand",
+            "role_titles": [
+                "Professional Athlete",
+                "Collegiate Athlete",
+                "Fitness Coach",
+                "Sports Influencer",
+                "Personal Trainer"
+            ],
+            "work_experience": [
+                "Competes or trains professionally or semi-professionally",
+                "Maintains a public persona on Instagram, TikTok, or YouTube",
+                "Monetizes through sponsorships, coaching, merch, or brand deals"
+            ],
+            "daily_process": [
+                "Train or compete in their sport",
+                "Post training clips, game highlights, or fitness content",
+                "Engage with fans and sponsors on social",
+                "Manage sponsorships, coaching clients, or merchandise drops",
+                "Look for collaboration or growth opportunities"
+            ],
+            "core_pain_points": [
+                "Hard to track who’s genuinely interested in working with them",
+                "DMs filled with noise and fake opportunities",
+                "Missing brand deals or high-value fans",
+                "No system to turn engagement into partnerships or income"
+            ],
+            "current_workarounds": [
+                "Manually respond to comments and filter DMs",
+                "Use agent/manager or handle everything solo",
+                "Scroll for hours to find opportunities hidden in replies"
+            ],
+            "emotional_states": [
+                "Laser-focused on performance",
+                "Excited but overwhelmed by digital attention",
+                "Wants to build a business off the field but lacks tools"
+            ],
+            "language_phrases": [
+                "serious collabs only",
+                "brand partnership",
+                "online coaching clients",
+                "grow my personal brand",
+                "turn followers into clients"
+            ],
+            "trigger_signals": [
+                "“My inbox is full but nothing converts.”",
+                "“People ask about coaching but ghost after.”",
+                "“I want to work with serious brands.”"
+            ],
+            "early_adopter_indicators": [
+                "Has >2k engaged followers",
+                "Already monetizing through any channel",
+                "Comfortable with new tools if results are clear"
+            ]
+        }}
     """
 }

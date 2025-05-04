@@ -2,7 +2,7 @@
 from datetime import datetime, UTC, timedelta
 from typing import Dict, Any, Optional, List, Union
 import logging
-import hashlib
+import uuid
 
 # Local imports
 from .accounts import AccountManager
@@ -39,19 +39,45 @@ class LeadsManager:
             self.db = None
             self.users_collection = None
 
-    def get_leads(self, user_id: str, platforms: Optional[List[str]] = None) -> List[Dict[str, Any]]:
-        """Get all leads for a user, optionally filtered by platforms."""
+    def get_leads(self, user_id: str, platforms: Optional[List[str]] = None, time_filter: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Get all leads for a user, optionally filtered by platforms and time period.
+        
+        Args:
+            user_id: The ID of the user
+            platforms: Optional list of platforms to filter by
+            time_filter: Optional time period to filter by ('24h', '7d', '30d', 'all')
+        """
         # Validate platforms if provided
         if platforms:
             invalid_platforms = [p for p in platforms if p.lower() not in supported_platforms]
             if invalid_platforms:
                 raise ValueError(f"Invalid platforms: {', '.join(invalid_platforms)}. Must be one of: {', '.join(supported_platforms)}")
             
+        # Validate time filter if provided
+        if time_filter and time_filter not in ['24h', '7d', '30d', 'all']:
+            raise ValueError("Invalid time filter. Must be one of: '24h', '7d', '30d', 'all'")
+            
         user = self.users_collection.find_one({"_id": user_id})
         if not user:
             raise ValueError(f"User with ID {user_id} not found")
             
         leads = user.get("captured_leads", [])
+        
+        # Apply time filter if specified
+        if time_filter and time_filter != 'all':
+            now = datetime.now(UTC)
+            if time_filter == '24h':
+                cutoff = now - timedelta(hours=24)
+            elif time_filter == '7d':
+                cutoff = now - timedelta(days=7)
+            else:  # '30d'
+                cutoff = now - timedelta(days=30)
+                
+            leads = [
+                lead for lead in leads 
+                if datetime.fromisoformat(lead["captured_at"].replace("Z", "+00:00")) > cutoff
+            ]
+            
         if platforms:
             # Convert all platforms to lowercase for comparison
             platforms_lower = [p.lower() for p in platforms]
@@ -141,8 +167,8 @@ class LeadsManager:
         if not user:
             raise ValueError(f"User with ID {user_id} not found")
             
-        # Generate lead ID
-        lead_id = hashlib.sha256(f"{user_id}:{lead_data['username']}:{datetime.now(UTC)}".encode()).hexdigest()
+        # Generate lead ID and convert to string
+        lead_id = str(uuid.uuid4())
         
         # Prepare lead data
         lead = {

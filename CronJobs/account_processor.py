@@ -10,7 +10,8 @@ from UtilityFunctions.openai_gpt import openai_route
 from DatabaseManager import (
     preferences_manager,
     leads_manager,
-    account_manager
+    account_manager,
+    knowledge_manager
 )
 from SystemFiles.prompts import LEAD_CHECK_PROMPT
 
@@ -58,16 +59,41 @@ class AccountProcessor:
         for follower in followers_response:
             account_manager.add_processed_account(internal_site_id, {
                 "platform": "instagram", 
-                "source": account["metadata"]["username_id"], 
+                "source": account["username"], 
+                "follower": follower.get("username"),
                 "follower_id": follower.get("id")
                 }
             )
-            if follower.get("is_private"): continue
             
             follower_id, follower_username = follower.get("id"), follower.get("username")
+            knowledge_id = f"{follower_username}:instagram"
+            
+            # Base data for all accounts
+            base_data = {
+                "platform": "instagram",
+                "is_private": follower.get("is_private", False),
+                "username": follower_username,
+                "id": follower_id,
+                "source": account["username"],
+                "source_id": account["metadata"]["username_id"],
+                "timestamp": datetime.now().isoformat(),
+                "profile": follower
+            }
+            
+            if follower.get("is_private"):
+                # Store private account data
+                knowledge_manager.add_data(base_data, custom_id=knowledge_id)
+                continue
+            
             follower_data = instagram_api.get_user_by_id(follower_id)
             # Clean the data before passing to lead check
             cleaned_data = AccountProcessor.clean_follower_data(follower_data)
+            
+            # Add profile data for non-private accounts
+            base_data["profile"] = cleaned_data
+            
+            # Store non-private account data
+            knowledge_manager.add_data(base_data, custom_id=knowledge_id)
                 
             # Only process new followers for leads
             lead_check = openai_route(LEAD_CHECK_PROMPT.format(
@@ -79,6 +105,7 @@ class AccountProcessor:
             if lead_check == "true":
                 lead_data = cleaned_data
                 lead_data["platform"] = "instagram"
-                lead_data["source"] = account["metadata"]["username_id"]
-                
+                lead_data["source"] = account["username"]
+                lead_data["source_id"] = account["metadata"]["username_id"]
+
                 leads_manager.add_lead(internal_site_id, lead_data)

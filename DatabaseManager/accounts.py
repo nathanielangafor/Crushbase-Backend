@@ -2,7 +2,7 @@
 import logging
 from datetime import datetime, UTC
 from typing import Dict, Any, Optional, List, Union
-import hashlib
+import uuid
 
 # Third-party imports
 from dotenv import load_dotenv
@@ -80,7 +80,7 @@ class AccountManager:
                 raise ValueError("User already exists")
                 
             # Generate ID and set initial fields
-            user_data["_id"] = hashlib.sha256(f"{user_data.get("email").lower()}:{user_data.get("password")}".encode()).hexdigest()
+            user_data["_id"] = str(uuid.uuid4())
             user_data["created_at"] = datetime.now(UTC).isoformat()
             user_data["subscription"] = {
                 "plan": "free",
@@ -183,7 +183,7 @@ class AccountManager:
             raise ValueError(f"Account {username} on {platform} is already being tracked")
             
         # Create new account entry
-        account_id = hashlib.sha256(f"{user_id}:{platform.lower()}:{username}".encode()).hexdigest()
+        account_id = uuid.uuid4()
         new_account = {
             "account_id": account_id,
             "platform": platform.lower(),
@@ -239,3 +239,11 @@ class AccountManager:
         )
         
         return result.modified_count > 0
+
+    def get_processed_accounts(self, user_id: str) -> List[Dict[str, Any]]:
+        """Get all processed accounts for a user."""
+        user = self.get_user(user_id)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found")
+            
+        return user.get("processed_accounts", [])

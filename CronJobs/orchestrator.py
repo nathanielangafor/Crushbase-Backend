@@ -132,5 +132,5 @@ def process_tracked_accounts(user_data):
 if __name__ == "__main__":
     # populate_dummy_user()
     user_data = get_user_data()
-    process_pending_crawler_sessions(user_data)
-    # process_tracked_accounts(user_data)
+    # process_pending_crawler_sessions(user_data)
+    process_tracked_accounts(user_data)

@@ -275,5 +275,63 @@ ICPs: dict = {
                 "Comfortable with new tools if results are clear"
             ]
         }}
+    """,
+
+    "job_seeker": """
+        {{
+            "icp_name": "Job Seeker",
+            "industry": "Any industry",
+            "company_stage": "Not currently employed or seeking transition",
+            "company_size": "N/A",
+            "team_context": "Operates independently; may be part of online communities or alumni groups",
+            "role_titles": [
+                "Any role"
+            ],
+            "work_experience": [
+                "0–10+ years professional experience",
+                "Currently between jobs or exploring new roles",
+                "Spends time networking, refining resume, and applying online"
+            ],
+            "daily_process": [
+                "Apply to roles on LinkedIn, Indeed, or company sites",
+                "Engage with recruiters, founders, or career communities online",
+                "Post open-to-work updates or portfolio pieces",
+                "Cold DM people at companies of interest",
+                "Track interviews and follow-ups manually"
+            ],
+            "core_pain_points": [
+                "Applications feel like a black hole",
+                "Hard to stand out or get seen",
+                "Not sure who’s actually engaging with their posts",
+                "Feels invisible despite effort on social"
+            ],
+            "current_workarounds": [
+                "Use spreadsheets to track networking efforts",
+                "Manually reach out to people who like or comment",
+                "Search LinkedIn for people working at target companies"
+            ],
+            "emotional_states": [
+                "Motivated but anxious",
+                "Hopeful, sometimes burnt out",
+                "Determined to make the right connection"
+            ],
+            "language_phrases": [
+                "open to work",
+                "actively applying",
+                "referrals",
+                "networking",
+                "please let me know if you’re hiring"
+            ],
+            "trigger_signals": [
+                "“I’m trying to turn engagement into interviews.”",
+                "“People like my post but don’t reach out.”",
+                "“I don’t know who to follow up with.”"
+            ],
+            "early_adopter_indicators": [
+                "Posting actively on LinkedIn",
+                "Cold messaging recruiters or founders",
+                "Open to tools that give a networking edge"
+            ]
+        }}
     """
 }

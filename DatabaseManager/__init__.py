@@ -11,6 +11,7 @@ from .crawler import CrawlerManager
 from .subscription import SubscriptionManager
 from .leads import LeadsManager
 from .preferences import PreferencesManager
+from .knowledge import KnowledgeManager
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,12 +23,14 @@ class DatabaseManager:
         self.subscription_manager = SubscriptionManager(self.account_manager)
         self.leads_manager = LeadsManager(connection_string, db_name, collection_name)
         self.preferences_manager = PreferencesManager(connection_string, db_name, collection_name)
+        self.knowledge_manager = KnowledgeManager(connection_string, db_name, os.getenv("MONGO_KNOWLEDGE_COLLECTION_NAME"))
 
     def close(self):
         """Close all database connections."""
         self.account_manager.close()
         self.leads_manager.close()
         self.preferences_manager.close()
+        self.knowledge_manager.close()
 
 # Create a default instance
 db_manager = DatabaseManager()
@@ -36,3 +39,4 @@ preferences_manager = db_manager.preferences_manager
 subscription_manager = db_manager.subscription_manager
 account_manager = db_manager.account_manager
 crawler_manager = db_manager.crawler_manager
+knowledge_manager = db_manager.knowledge_manager

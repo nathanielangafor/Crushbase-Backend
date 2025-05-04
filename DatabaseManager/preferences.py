@@ -2,7 +2,7 @@
 from datetime import datetime, UTC
 from typing import Dict, Any, Optional, List, Union
 import logging
-import hashlib
+import uuid
 
 # Third-party imports
 from pymongo import MongoClient
@@ -57,7 +57,7 @@ class PreferencesManager:
             raise ValueError(f"Preference with description '{description}' for {platform} already exists")
             
         # Create new preference entry
-        preference_id = hashlib.sha256(f"{user_id}:{platform.lower()}:{description}".encode()).hexdigest()
+        preference_id = uuid.uuid4()
         new_preference = {
             "preference_id": preference_id,
             "platform": platform.lower(),

@@ -1,5 +1,4 @@
 # Standard library imports
-import hashlib
 import json
 import os
 import time
@@ -156,22 +155,36 @@ async def delete_user(internal_site_id: str):
 async def login_user(user: UserLogin):
     """Authenticate a user and return their session information."""
     try:
-        combined = f"{user.email.lower()}:{user.password}"
-        internal_site_id = hashlib.sha256(combined.encode()).hexdigest()
-        user = account_manager.get_user(internal_site_id)
-        del user["processed_accounts"]
-        del user["crawler_sessions"]
-        del user["tracked_accounts"]
-        del user["lead_preferences"]
-        del user["captured_leads"]
-        del user["password"]
+        # Get user by email
+        user_data = account_manager.get_user_by_email(user.email)
+        if not user_data:
+            return JSONResponse(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content={"message": "Invalid email or password"}
+            )
+            
+        # Verify password
+        if user_data["password"] != user.password:
+            return JSONResponse(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content={"message": "Invalid email or password"}
+            )
+            
+        # Remove sensitive data before returning
+        del user_data["processed_accounts"]
+        del user_data["crawler_sessions"]
+        del user_data["tracked_accounts"]
+        del user_data["lead_preferences"]
+        del user_data["captured_leads"]
+        del user_data["password"]
+        
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content={"user": user}
+            content={"user": user_data}
         )
     except Exception as e:
         return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"message": str(e)}
         )
 
@@ -180,6 +193,12 @@ async def update_user(update: UserUpdate):
     """Update user account information."""
     try:
         current_user = account_manager.get_user(update.internal_site_id)
+        if not current_user:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={"message": "User not found"}
+            )
+            
         update_data = {
             k: v for k, v in {
                 "name": update.name,
@@ -207,25 +226,7 @@ async def update_user(update: UserUpdate):
                 content={"message": "No changes were made"}
             )
             
-        if "email" in update_data or "password" in update_data:
-            new_email = update_data.get("email", current_user.get("email"))
-            new_password = update_data.get("password", current_user.get("password"))
-            new_id = hashlib.sha256(f"{new_email}:{new_password}".encode()).hexdigest()
-            
-            # Create new user with updated data
-            new_user_data = {**current_user, **update_data}
-            new_user_data["_id"] = new_id
-            account_manager.create_user(new_user_data)
-            account_manager.delete_user(update.internal_site_id)
-            
-            return JSONResponse(
-                status_code=status.HTTP_200_OK,
-                content={
-                    "message": "User data updated successfully",
-                    "new_internal_site_id": new_id
-                }
-            )
-            
+        # Update the user
         account_manager.update_user(update.internal_site_id, update_data)
         return JSONResponse(
             status_code=status.HTTP_200_OK,
@@ -355,15 +356,31 @@ async def delete_tracked_account(internal_site_id: str, account_id: str):
 async def create_preference(preference: LeadPreference):
     """Create a new lead preference."""
     try:
-        preference_id = preferences_manager.add_lead_preference(
-            preference.internal_site_id,
-            preference.platform,
-            preference.description
-        )
+        # Validate platforms
+        if isinstance(preference.platform, str):
+            platforms = [preference.platform]
+        else:
+            platforms = preference.platform
+            
+        invalid_platforms = [p for p in platforms if p not in supported_platforms]
+        if invalid_platforms:
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={"message": f"Invalid platforms: {', '.join(invalid_platforms)}. Must be one of: {', '.join(supported_platforms)}"}
+            )
+            
+        preference_ids = []
+        for platform in platforms:
+            preference_id = preferences_manager.add_lead_preference(
+                preference.internal_site_id,
+                platform,
+                preference.description
+            )
+            preference_ids.append(preference_id)
         
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
-            content={"preference_id": preference_id}
+            content={"preference_ids": preference_ids}
         )
     except ValueError as e:
         return JSONResponse(
@@ -448,6 +465,7 @@ async def delete_preference(internal_site_id: str, preference_id: str):
 async def get_leads(
     internal_site_id: str,
     platforms: Optional[List[str]] = Query(None, description="Filter leads by platforms"),
+    time_filter: Optional[str] = Query(None, description="Filter leads by time period (24h, 7d, 30d, all)"),
     pagination: PaginationParams = Depends()
 ):
     """Get paginated list of leads for a user."""
@@ -460,7 +478,7 @@ async def get_leads(
                     content={"message": f"Invalid platforms: {', '.join(invalid_platforms)}. Must be one of: {', '.join(supported_platforms)}"}
                 )
                 
-        leads = leads_manager.get_leads(internal_site_id, platforms)
+        leads = leads_manager.get_leads(internal_site_id, platforms, time_filter)
         
         if pagination.page == -1:
             return JSONResponse(
@@ -897,5 +915,5 @@ async def get_linkedin_compatibility(
         )
 
 if __name__ == "__main__":    
-    start_server(prod=True)
+    start_server(prod=False)
 

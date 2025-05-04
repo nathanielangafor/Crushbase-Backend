@@ -65,7 +65,7 @@ class TrackedAccount(BaseModel):
 # Lead Models
 class LeadPreference(BaseModel):
     """Lead generation preference model."""
-    platform: str = Field(..., description="Social media platform")
+    platform: Union[str, List[str]] = Field(..., description="Social media platform(s)")
     description: str = Field(..., description="Detailed description of the preference criteria")
     internal_site_id: str = Field(..., description="Unique identifier of the user")
 

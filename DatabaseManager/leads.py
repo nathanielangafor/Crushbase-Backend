@@ -15,29 +15,16 @@ logger = logging.getLogger(__name__)
 
 
 class LeadsManager:
-    def __init__(self, connection_string: str, db_name: str, collection_name: str):
+    def __init__(self, client: MongoClient, db_name: str, collection_name: str):
         """Initialize the LeadsManager with MongoDB connection details."""
-        self.connection_string = connection_string
-        self.db_name = db_name
-        self.collection_name = collection_name
-        self.client = None
-        self.db = None
-        self.users_collection = None
-        self.connect()
-
-    def connect(self) -> None:
-        """Establish connection to MongoDB."""
-        self.client = MongoClient(self.connection_string)
-        self.db = self.client[self.db_name]
-        self.users_collection = self.db[self.collection_name]
+        self.client = client
+        self.db = self.client[db_name]
+        self.users_collection = self.db[collection_name]
 
     def close(self) -> None:
         """Close the MongoDB connection."""
-        if self.client:
-            self.client.close()
-            self.client = None
-            self.db = None
-            self.users_collection = None
+        # No need to close the client here as it's managed by DatabaseManager
+        pass
 
     def get_leads(self, user_id: str, platforms: Optional[List[str]] = None, time_filter: Optional[str] = None) -> List[Dict[str, Any]]:
         """Get all leads for a user, optionally filtered by platforms and time period.
@@ -162,10 +149,17 @@ class LeadsManager:
         return overview
 
     def add_lead(self, user_id: str, lead_data: Dict[str, Any]) -> str:
-        """Add a new lead to the user's captured leads."""
+        """Add a new lead to the user's captured leads if it doesn't already exist."""
         user = self.users_collection.find_one({"_id": user_id})
         if not user:
             raise ValueError(f"User with ID {user_id} not found")
+            
+        # Check if lead already exists
+        existing_leads = user.get("captured_leads", [])
+        for existing_lead in existing_leads:
+            if (existing_lead.get("platform") == lead_data["platform"] and 
+                existing_lead.get("username") == lead_data["username"]):
+                return existing_lead.get("lead_id")  # Return existing lead ID
             
         # Generate lead ID and convert to string
         lead_id = str(uuid.uuid4())

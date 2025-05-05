@@ -100,7 +100,7 @@ class AccountProcessor:
                 data=str(cleaned_data),
                 preferences=str(account_preferences)
             ))
-            print(follower_username, lead_check.lower())    
+            print(follower_username, lead_check)    
 
             if lead_check == "true":
                 lead_data = cleaned_data

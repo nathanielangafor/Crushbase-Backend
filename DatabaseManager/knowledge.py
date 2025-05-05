@@ -3,8 +3,8 @@ from typing import Dict, Any, Optional
 from pymongo import MongoClient
 
 class KnowledgeManager:
-    def __init__(self, connection_string: str, db_name: str, collection_name: str):
-        self.client = MongoClient(connection_string)
+    def __init__(self, client: MongoClient, db_name: str, collection_name: str):
+        self.client = client
         self.db = self.client[db_name]
         self.collection = self.db[collection_name]
 
@@ -34,4 +34,5 @@ class KnowledgeManager:
 
     def close(self):
         """Close the MongoDB connection."""
-        self.client.close()
+        # No need to close the client here as it's managed by DatabaseManager
+        pass

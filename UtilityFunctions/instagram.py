@@ -22,21 +22,20 @@ load_dotenv()
 
 
 class insta:
-    BASE_URL = "https://instagram-premium-api-2023.p.rapidapi.com/v2"
-    API_HOST = "instagram-premium-api-2023.p.rapidapi.com"
+    BASE_URL = "https://api.hikerapi.com/v2"
 
     def __init__(self):
         """Initialize the Instagram API client with the API key from environment variables."""
-        self.api_key = os.getenv("INSTAGRAM_RAPID_API_KEY")
+        self.api_key = os.getenv("INSTAGRAM_SCRAPPER_KEY")
 
     @retry(max_attempts=3, delay=3.0)
     def _get(self, endpoint: str, params: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
         """Make a GET request to the Instagram API with the given endpoint and parameters."""
         if params is None:
             params = {}
+        params['access_key'] = self.api_key
         headers = {
-            "X-RAPIDAPI-KEY": self.api_key,
-            "x-rapidapi-host": self.API_HOST
+            "Accept": "application/json"
         }
         response = requests.get(f"{self.BASE_URL}/{endpoint}", params=params, headers=headers)
         response.raise_for_status()
@@ -121,4 +120,3 @@ class insta:
         response = self._get("media/likers", {"id": post_id})
         return response["response"]["likers"]
 
-# print(insta().get_user_by_username("elitesoccergear"))

@@ -256,7 +256,7 @@ async def create_tracked_account(account: TrackedAccount):
             )
         
         if user.platform == "instagram":
-            access_key = os.getenv('X-RAPIDAPI-KEY')
+            access_key = os.getenv('INSTAGRAM_SCRAPPER_KEY')
             if not access_key:
                 return JSONResponse(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -542,7 +542,7 @@ async def get_lead_overview(internal_site_id: str):
 async def get_user_id(username: str):
     """Get user ID from username using Instagram API."""
     try:
-        access_key = os.getenv('X-RAPIDAPI-KEY')
+        access_key = os.getenv('INSTAGRAM_SCRAPPER_KEY')
         if not access_key:
             return JSONResponse(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

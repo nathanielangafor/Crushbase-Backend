@@ -12,29 +12,16 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class PreferencesManager:
-    def __init__(self, connection_string: str, db_name: str, collection_name: str):
+    def __init__(self, client: MongoClient, db_name: str, collection_name: str):
         """Initialize the PreferencesManager with MongoDB connection details."""
-        self.connection_string = connection_string
-        self.db_name = db_name
-        self.collection_name = collection_name
-        self.client = None
-        self.db = None
-        self.users_collection = None
-        self.connect()
-
-    def connect(self) -> None:
-        """Establish connection to MongoDB."""
-        self.client = MongoClient(self.connection_string)
-        self.db = self.client[self.db_name]
-        self.users_collection = self.db[self.collection_name]
+        self.client = client
+        self.db = self.client[db_name]
+        self.users_collection = self.db[collection_name]
 
     def close(self) -> None:
         """Close the MongoDB connection."""
-        if self.client:
-            self.client.close()
-            self.client = None
-            self.db = None
-            self.users_collection = None
+        # No need to close the client here as it's managed by DatabaseManager
+        pass
 
     def add_lead_preference(self, user_id: str, platform: str, description: str) -> str:
         """Add a new lead preference for a user."""

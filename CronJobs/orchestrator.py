@@ -15,62 +15,9 @@ from SystemFiles.config import supported_platforms
 from .account_processor import AccountProcessor
 from .crawler_processor import ContactCrawler
 
-
-def populate_dummy_user():
-    """Creates a test user with sample data if no users exist."""
-    test_user = {
-        "name": "Test User",
-        "email": "test@example.com",
-        "password": "TestPass123!",
-        "created_at": "2024-04-26T00:00:00.000Z",
-        "updated_at": "2024-04-26T00:00:00.000Z",
-        "subscription": {
-            "plan": "free",
-            "start_time": 1714089600,
-            "end_time": None,
-            "previous_plan": None,
-            "upgraded_at": None
-        },
-        "crawler_sessions": {},
-        "tracked_accounts": [],
-        "lead_preferences": [],
-        "captured_leads": []
-    }
-    user_id = account_manager.create_user(test_user)
-    
-    # Add lead preference for all accounts
-    preferences_manager.add_lead_preference(
-        user_id=user_id,
-        platform="instagram",
-        description="Any account even remotely related to soccer! Whether its a player, coach, or fan account."
-    )
-    
-    account_id = account_manager.add_tracked_account(
-        user_id=user_id,
-        platform="instagram",
-        username="diazafootball",
-        metadata={"username_id": "8604916346"}
-    )
-    print(f"Added tracked Instagram account with ID: {account_id}")
-    
-    # Create a crawler session for the test user
-    crawler_manager.initialize_crawler_session(
-        user_id=user_id,
-        start_url="https://crushbase.app",
-        depth=2,
-        max_pages=10
-    )
-    return user_id
-
-
 def get_user_data():
     """Retrieves and formats user data for processing."""
     all_users = account_manager.get_all_users()
-    
-    # Create test user if none exist
-    if not all_users:
-        populate_dummy_user()
-        all_users = account_manager.get_all_users()
     
     user_data = [
         {
@@ -130,7 +77,6 @@ def process_tracked_accounts(user_data):
 
 
 if __name__ == "__main__":
-    # populate_dummy_user()
     user_data = get_user_data()
     # process_pending_crawler_sessions(user_data)
     process_tracked_accounts(user_data)

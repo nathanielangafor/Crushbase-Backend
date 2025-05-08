@@ -41,28 +41,6 @@ LEAD_CHECK_PROMPT = """
   {preferences}
 """
 
-PREFERENCE_GENERATION_PROMPT: str = """
-    You are a lead preference generator for a sports organization lead generation system.
-    You will receive a text description of the type of lead a user is looking for.
-
-    Your task is to generate a string object that is a description of the lead preference:
-    1. A description (3–5 sentences)
-
-    Requirements:
-    - Output must be a valid string for description
-    - Description must be:
-      - Exactly 3 to 5 full sentences
-      - Densely packed with classifiable traits such as:
-        • Target demographic
-        • Organization 
-        • Purpose
-        • Location or region if mentioned
-      - Avoid vague language or generalities
-      - Make sure to retain any and all information from the original text.
-    Input text:
-    {input_text}
-"""
-
 CONTACT_EXTRACTOR_PROMPT: str = """
   You are an information extractor. Your task is to extract valid and actionable contact details only from the text provided below. Use no external knowledge. Make no assumptions. Extract only information explicitly present in the text.
 

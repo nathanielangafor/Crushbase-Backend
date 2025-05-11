@@ -915,5 +915,5 @@ async def get_linkedin_compatibility(
         )
 
 if __name__ == "__main__":    
-    start_server(prod=True)
+    start_server(prod=False)
 

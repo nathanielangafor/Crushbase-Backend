@@ -71,9 +71,7 @@ class AccountProcessor:
                 }
             )
             
-            knowledge_id = f"{follower_username}:instagram"
-            knowledge_manager.add_data(base_data, custom_id=knowledge_id)
-            
+            knowledge_id = f"{follower_username}:instagram"            
             # Base data for all accounts
             base_data = {
                 "platform": "instagram",
@@ -85,6 +83,8 @@ class AccountProcessor:
                 "timestamp": datetime.now().isoformat(),
                 "profile": follower
             }
+
+            knowledge_manager.add_data(base_data, custom_id=knowledge_id)
             
             # Skip API call if private account
             if follower.get("is_private") or follower_username in existing_leads:

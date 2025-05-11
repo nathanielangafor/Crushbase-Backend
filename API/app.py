@@ -258,7 +258,7 @@ async def create_tracked_account(account: TrackedAccount):
         if account.platform == "instagram":
             instagram_api = insta()
             metadata = {
-                "username_id": instagram_api.get_userid_from_username(account.username)["user_id"]
+                "username_id": instagram_api.get_userid_from_username(account.username)
             }
         
         account_id = account_manager.add_tracked_account(
@@ -549,7 +549,7 @@ async def get_user_id(username: str):
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
-                "user_id": user_id_response["user_id"],
+                "user_id": user_id_response,
                 "username": username,
                 "exists": True
             }

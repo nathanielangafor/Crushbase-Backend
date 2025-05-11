@@ -256,13 +256,7 @@ async def create_tracked_account(account: TrackedAccount):
             )
         
         if account.platform == "instagram":
-            access_key = os.getenv('INSTAGRAM_SCRAPPER_KEY')
-            if not access_key:
-                return JSONResponse(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    content={"message": "Instagram API access key not configured"}
-                )
-            instagram_api = insta(access_key)
+            instagram_api = insta()
             metadata = {
                 "username_id": instagram_api.get_userid_from_username(account.username)["user_id"]
             }

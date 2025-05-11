@@ -255,7 +255,7 @@ async def create_tracked_account(account: TrackedAccount):
                 content={"message": "User not found"}
             )
         
-        if user.platform == "instagram":
+        if account.platform == "instagram":
             access_key = os.getenv('INSTAGRAM_SCRAPPER_KEY')
             if not access_key:
                 return JSONResponse(

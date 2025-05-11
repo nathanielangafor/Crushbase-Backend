@@ -44,7 +44,7 @@ class PreferencesManager:
             raise ValueError(f"Preference with description '{description}' for {platform} already exists")
             
         # Create new preference entry
-        preference_id = uuid.uuid4()
+        preference_id = str(uuid.uuid4())
         new_preference = {
             "preference_id": preference_id,
             "platform": platform.lower(),

@@ -170,7 +170,7 @@ class AccountManager:
             raise ValueError(f"Account {username} on {platform} is already being tracked")
             
         # Create new account entry
-        account_id = uuid.uuid4()
+        account_id = str(uuid.uuid4())
         new_account = {
             "account_id": account_id,
             "platform": platform.lower(),
